@@ -1,17 +1,20 @@
 import {
   Body,
   Controller,
+  Delete,
+  Get,
   HttpCode,
   HttpStatus,
   Logger,
   Param,
+  Patch,
   Post,
   Req,
   UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { CreteVehicleDto } from './vehicles.dto';
+import { CreteVehicleDto, UpdateVehicleDto } from './vehicles.dto';
 import { VehiclesService } from './vehicles.service';
 import { AuthGuard } from '../auth/auth.guard';
 import { CommonRequest } from '../utils';
@@ -31,7 +34,7 @@ export class VehiclesController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard)
   @Post(':vehicleId/projects/:projectId')
-  async addUserToProject(
+  async addVehicleToProject(
     @Param('projectId') projectId: string,
     @Param('vehicleId') vehicleId: string,
     @Req() req: CommonRequest,
@@ -42,5 +45,38 @@ export class VehiclesController {
       +projectId,
       req.userId,
     );
+  }
+
+  @Get(':vehicleId')
+  @UseGuards(AuthGuard)
+  async getVehicle(
+    @Param('vehicleId') vehicleId: string,
+    @Req() req: CommonRequest,
+  ) {
+    return this.vehiclesService.findVehicleForUser(req.userId, +vehicleId);
+  }
+
+  @Patch(':vehicleId')
+  @UseGuards(AuthGuard)
+  @UsePipes(new ValidationPipe())
+  async updateVehicle(
+    @Param('vehicleId') vehicleId: string,
+    @Body() updateVehicleDto: UpdateVehicleDto,
+    @Req() req: CommonRequest,
+  ) {
+    return this.vehiclesService.updateVehicle(
+      req.userId,
+      +vehicleId,
+      updateVehicleDto,
+    );
+  }
+
+  @Delete(':vehicleId')
+  @UseGuards(AuthGuard)
+  async deleteVehicle(
+    @Param('vehicleId') vehicleId: string,
+    @Req() req: CommonRequest,
+  ) {
+    return this.vehiclesService.deleteVehicle(req.userId, +vehicleId);
   }
 }

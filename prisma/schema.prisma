@@ -31,7 +31,7 @@ model ProjectAssigment {
   id        Int     @id @default(autoincrement())
   projectId Int
   userId    Int
-  project   Project @relation(fields: [projectId], references: [id])
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   user      User    @relation(fields: [userId], references: [id])
 }
 
@@ -45,6 +45,6 @@ model VehicleAssigment {
   id        Int     @id @default(autoincrement())
   projectId Int
   vehicleId Int
-  vehicle   Vehicle @relation(fields: [vehicleId], references: [id])
+  vehicle   Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
   project   Project @relation(fields: [projectId], references: [id])
 }

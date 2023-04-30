@@ -72,4 +72,53 @@ export class VehiclesService {
       },
     });
   }
+
+  async findVehicleForUser(userId: number, vehicleId: number) {
+    const vehicleAssigment = await this.prisma.vehicleAssigment.findFirst({
+      where: {
+        vehicleId: vehicleId,
+        project: {
+          projectAssigments: {
+            some: {
+              userId: userId,
+            },
+          },
+        },
+      },
+      include: {
+        vehicle: true,
+      },
+    });
+
+    if (!vehicleAssigment) {
+      throw new ForbiddenException(
+        'User is not assigned to any project with this vehicle or vehicle does not exist',
+      );
+    }
+
+    return vehicleAssigment.vehicle;
+  }
+
+  async updateVehicle(
+    userId: number,
+    vehicleId: number,
+    updateData: Partial<Vehicle>,
+  ) {
+    await this.findVehicleForUser(userId, vehicleId);
+    return this.prisma.vehicle.update({
+      where: {
+        id: vehicleId,
+      },
+      data: updateData,
+    });
+  }
+
+  async deleteVehicle(userId: number, vehicleId: number) {
+    await this.findVehicleForUser(userId, vehicleId);
+    return this.prisma.vehicle.delete({
+      where: {
+        id: vehicleId,
+      },
+    });
+  }
 }
