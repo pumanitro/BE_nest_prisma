@@ -24,7 +24,7 @@
 
 ## Deploy
 - used neon.tech for free postgress DB and deploy (`npx prisma migrate deploy`)
-- used heroku for backend deploy 
+- used heroku for backend deploy - https://benestprisma.herokuapp.com/api or just https://benestprisma.herokuapp.com
 
 ## Description
 
