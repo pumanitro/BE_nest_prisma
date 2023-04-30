@@ -3,6 +3,8 @@ import {
   Controller,
   HttpCode,
   HttpStatus,
+  Logger,
+  Param,
   Post,
   Req,
   UseGuards,
@@ -24,5 +26,16 @@ export class ProjectsController {
   @UsePipes(new ValidationPipe())
   create(@Body() createProjectDto: CreteProjectDto, @Req() req: CommonRequest) {
     return this.projectsService.createOne(createProjectDto, req.userId);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard)
+  @Post(':projectId/users/:userId')
+  async addUserToProject(
+    @Param('projectId') projectId: string,
+    @Param('userId') userId: string,
+  ) {
+    Logger.log(`Adding user ${userId} to project ${projectId}`);
+    return this.projectsService.addUserToProject(+projectId, +userId);
   }
 }
