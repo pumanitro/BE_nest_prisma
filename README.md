@@ -26,6 +26,9 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+## .env
+ You need .ev file defined as .env_example to run this project
+
 ## Installation
 
 ```bash
